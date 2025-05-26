@@ -1,0 +1,38 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+void aMinusculas(char texto[])
+{
+    for (int i = 0; texto[i] != '\0'; i++)
+    {
+        texto[i] = tolower(texto[i]);
+    }
+}
+
+int main()
+{
+    char oracion[200], palabra[50];
+
+    printf("Ingresá una oración: ");
+    fgets(oracion, sizeof(oracion), stdin);
+    printf("Ingresá una palabra: ");
+    fgets(palabra, sizeof(palabra), stdin);
+
+    oracion[strcspn(oracion, "\n")] = '\0';
+    palabra[strcspn(palabra, "\n")] = '\0';
+
+    aMinusculas(oracion);
+    aMinusculas(palabra);
+
+    if (strstr(oracion, palabra) != NULL)
+    {
+        printf("La palabra fue encontrada.\n");
+    }
+    else
+    {
+        printf("La palabra no se encontró.\n");
+    }
+
+    return 0;
+}
