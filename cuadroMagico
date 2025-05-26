@@ -1,0 +1,111 @@
+Terminado: 
+#include <stdio.h>
+	
+void cargar_matriz(int matriz[3][3]);
+void mostrar_matriz(int matriz[3][3]);
+void puntoDeSilla(int matriz[3][3]);
+void cuadroMagico(int matriz[3][3]);
+
+int main() {
+	int matriz[3][3];
+	int op;
+	
+	cargar_matriz(matriz);
+	mostrar_matriz(matriz);
+	printf("Ingrese la opcion: \nOpcion 1: Punto de Silla.\nOpcion 2: Cuadro Magico.\nOpcion: ");
+	scanf("%d", &op);
+	printf("\n");
+	
+	switch (op) {
+	case 1: puntoDeSilla(matriz); 
+	break;
+	case 2: cuadroMagico(matriz); 
+	break;
+	default:
+		printf("Opcion invalida.\n"); 
+		break;
+	}
+	return 0;
+}
+
+void cargar_matriz(int matriz[3][3]) {
+	int i, j;
+	for (i = 0; i < 3; i++) {
+		for (j = 0; j < 3; j++) {
+			printf("Ingrese un valor para matriz[%d][%d]: ", i, j);
+			scanf("%d", &matriz[i][j]);
+		}
+	}
+}
+
+void mostrar_matriz(int matriz[3][3]) {
+	int i, j;
+	for (i = 0; i < 3; i++) {
+		for (j = 0; j < 3; j++) {
+			printf("%d\t", matriz[i][j]);
+		}
+		printf("\n");
+	}
+}
+void puntoDeSilla(int matriz[3][3]){
+	int i, j, aux1;
+	int a, b;
+	int fila, columna;
+	for (i = 0; i < 3; i++) {
+		for (j = 0; j < 3; j++) {
+			aux1 = matriz[i][j];
+			columna = matriz[0][j];
+			for (a = 0; a<3;a++){
+				if (matriz[a][j] > columna) {
+					columna = matriz[a][j];
+				}
+			}
+			fila = matriz[i][0];
+			for (b = 0; b<3; b++) {
+				if (matriz[i][b] < fila) {
+					fila = matriz[i][b];
+				}
+			}
+			if (aux1 == columna && aux1 == fila) {
+				printf("%d es un punto silla.\n", aux1);
+			}
+		}
+	}
+}
+	void cuadroMagico(int matriz[3][3]){
+		int filas=0, columnas=0, diagonales=0, comparar=0, contFilas=0, contColumnas=0, contDiagonal=1, a, b;
+		int i,j;
+		/*Suma de filas*/
+		for (i=0;i<3;i++){
+			for (j=0;j<3;j++){
+				filas += matriz[i][j];
+			}
+			if (filas != comparar){
+				contFilas+=1;
+			}
+			comparar = filas;
+			filas = 0;
+		}
+		/*Suma de columnas*/
+		comparar=0;
+		for (j=0;j<3;j++){
+			for (i=0;i<3;i++){
+				columnas += matriz[i][j];
+			}
+			if (columnas != comparar){
+				contColumnas+=1;
+			}
+			comparar = columnas;
+			columnas = 0;
+			
+		}
+		/*Suma de diagonales*/
+		a = matriz[0][0] + matriz[1][1] + matriz[2][2];
+		b = matriz[0][2] + matriz[1][1] + matriz[2][0];
+		/*Conclusiones*/
+		if (contFilas == 1 && contColumnas == 1 && a == b){
+			printf("Es una matriz de cuadrado magico.\n");
+		} else {
+			printf("No es un cuadrado magico.\n");
+		}
+	}
