@@ -1,0 +1,212 @@
+#include <stdio.h>
+#include <stdlib.h> // Para funciones como qsort en el caso de ordenar
+
+#define TAM_MAX 100 // Tamaño máximo del arreglo
+
+// 1) Cargar un arreglo de x elementos.
+// La función devuelve la cantidad de elementos cargados.
+int cargarArreglo(int arreglo[], int tam_max) {
+    int i;
+    int num_elementos;
+
+    printf("¿Cuantos elementos desea cargar (max %d)? ", tam_max);
+    scanf("%d", &num_elementos);
+
+    if (num_elementos > tam_max) {
+        printf("Se excede el tamaño maximo del arreglo. Se cargaran %d elementos.\n", tam_max);
+        num_elementos = tam_max;
+    }
+
+    for (i = 0; i < num_elementos; i++) {
+        printf("Ingrese el elemento %d: ", i + 1);
+        scanf("%d", &arreglo[i]);
+    }
+    return num_elementos;
+}
+
+// 2) Recorrer un arreglo de x elementos.
+void recorrerArreglo(int arreglo[], int cant_actual) {
+    int i;
+    printf("Elementos del arreglo:\n");
+    for (i = 0; i < cant_actual; i++) {
+        printf("%d ", arreglo[i]);
+    }
+    printf("\n");
+}
+
+// 3) Buscar un elemento en ese arreglo.
+// Retorna la posición del elemento si se encuentra, o -1 si no.
+int buscarElemento(int arreglo[], int cant_actual, int elemento_a_buscar) {
+    int i;
+    for (i = 0; i < cant_actual; i++) {
+        if (arreglo[i] == elemento_a_buscar) {
+            return i; // Elemento encontrado en la posición i
+        }
+    }
+    return -1; // Elemento no encontrado
+}
+
+// 4) Acceder a un elemento en base a una posicion determinada.
+// 5) Acceder a una posicion determinado y mostrar contenido.
+// Retorna el valor del elemento en la posición, o un indicador de error si la posición es inválida.
+int accederYMostrarElemento(int arreglo[], int cant_actual, int posicion) {
+    if (posicion >= 0 && posicion < cant_actual) {
+        printf("El elemento en la posicion %d es: %d\n", posicion, arreglo[posicion]);
+        return arreglo[posicion];
+    } else {
+        printf("Posicion invalida. El arreglo tiene %d elementos (posiciones 0 a %d).\n", cant_actual, cant_actual - 1);
+        return -99999; // Valor de error arbitrario
+    }
+}
+
+// 6) Insertar un nuevo elemento en ese arreglo.
+// Se manejan dos casos: arreglo no ordenado y arreglo ordenado.
+// Retorna 1 si la inserción fue exitosa, 0 si no (ej. arreglo lleno).
+int insertarElemento(int arreglo[], int *cant_actual, int tam_max, int nuevo_elemento, int es_ordenado) {
+    if (*cant_actual >= tam_max) {
+        printf("El arreglo esta lleno, no se puede insertar.\n");
+        return 0; // Inserción fallida
+    }
+
+    if (es_ordenado) {
+        // Inserción en arreglo ordenado: encontrar la posición correcta y desplazar.
+        int i = *cant_actual - 1;
+        while (i >= 0 && arreglo[i] > nuevo_elemento) {
+            arreglo[i + 1] = arreglo[i];
+            i--;
+        }
+        arreglo[i + 1] = nuevo_elemento;
+    } else {
+        // Inserción en arreglo no ordenado: simplemente agregar al final.
+        arreglo[*cant_actual] = nuevo_elemento;
+    }
+
+    (*cant_actual)++; // Incrementar la cantidad actual de elementos
+    printf("Elemento %d insertado exitosamente.\n", nuevo_elemento);
+    return 1; // Inserción exitosa
+}
+
+// 7) Eliminar un elemento de ese arreglo.
+// Retorna 1 si la eliminación fue exitosa, 0 si no (elemento no encontrado o arreglo vacío).
+int eliminarElemento(int arreglo[], int *cant_actual, int elemento_a_eliminar) {
+    if (*cant_actual == 0) {
+        printf("El arreglo esta vacio, no hay elementos para eliminar.\n");
+        return 0; // Eliminación fallida
+    }
+
+    int i, posicion_eliminar = -1;
+    // Buscar la primera ocurrencia del elemento.
+    for (i = 0; i < *cant_actual; i++) {
+        if (arreglo[i] == elemento_a_eliminar) {
+            posicion_eliminar = i;
+            break;
+        }
+    }
+
+    if (posicion_eliminar != -1) {
+        // Desplazar elementos a la izquierda para "eliminar" el espacio.
+        for (i = posicion_eliminar; i < *cant_actual - 1; i++) {
+            arreglo[i] = arreglo[i + 1];
+        }
+        (*cant_actual)--; // Decrementar la cantidad actual de elementos
+        printf("Elemento %d eliminado exitosamente.\n", elemento_a_eliminar);
+        return 1; // Eliminación exitosa
+    } else {
+        printf("El elemento %d no se encontro en el arreglo.\n", elemento_a_eliminar);
+        return 0; // Eliminación fallida (elemento no encontrado)
+    }
+}
+
+// Función de comparación para qsort (necesaria para ordenar)
+int compararEnteros(const void *a, const void *b) {
+    return (*(int*)a - *(int*)b);
+}
+
+// 8) Ordenar un arreglo.
+void ordenarArreglo(int arreglo[], int cant_actual) {
+    if (cant_actual > 1) {
+        qsort(arreglo, cant_actual, sizeof(int), compararEnteros);
+        printf("El arreglo ha sido ordenado.\n");
+    } else if (cant_actual == 0) {
+        printf("El arreglo esta vacio, no hay nada que ordenar.\n");
+    } else {
+        printf("El arreglo tiene un solo elemento, ya esta ordenado.\n");
+    }
+}
+
+
+int main() {
+    int miArreglo[TAM_MAX];
+    int cantidadActual = 0;
+    int opcion, elemento, posicion;
+    int es_ordenado_flag = 0; // Flag para indicar si el arreglo está ordenado (para la inserción)
+
+    do {
+        printf("\n--- MENU DE OPERACIONES CON ARREGLOS ---\n");
+        printf("1. Cargar arreglo\n");
+        printf("2. Recorrer y mostrar arreglo\n");
+        printf("3. Buscar un elemento\n");
+        printf("4. Acceder y mostrar elemento por posicion\n");
+        printf("5. Insertar un nuevo elemento (en arreglo no ordenado o manteniendo el orden)\n");
+        printf("6. Eliminar un elemento\n");
+        printf("7. Ordenar arreglo\n");
+        printf("0. Salir\n");
+        printf("Ingrese su opcion: ");
+        scanf("%d", &opcion);
+
+        switch (opcion) {
+            case 1:
+                cantidadActual = cargarArreglo(miArreglo, TAM_MAX);
+                es_ordenado_flag = 0; // Al cargar, asumimos que no está ordenado.
+                break;
+            case 2:
+                recorrerArreglo(miArreglo, cantidadActual);
+                break;
+            case 3:
+                printf("Ingrese el elemento a buscar: ");
+                scanf("%d", &elemento);
+                posicion = buscarElemento(miArreglo, cantidadActual, elemento);
+                if (posicion != -1) {
+                    printf("Elemento %d encontrado en la posicion %d.\n", elemento, posicion);
+                } else {
+                    printf("Elemento %d no encontrado.\n", elemento);
+                }
+                break;
+            case 4:
+                printf("Ingrese la posicion a acceder: ");
+                scanf("%d", &posicion);
+                accederYMostrarElemento(miArreglo, cantidadActual, posicion);
+                break;
+            case 5:
+                printf("Ingrese el elemento a insertar: ");
+                scanf("%d", &elemento);
+                int tipo_insercion;
+                printf("¿Desea insertarlo manteniendo el orden (1) o simplemente al final/donde corresponda (0)? (Si el arreglo no esta ordenado, se agregara al final)\n");
+                scanf("%d", &tipo_insercion);
+                if (tipo_insercion == 1 && es_ordenado_flag == 0) {
+                    printf("Advertencia: El arreglo no esta actualmente ordenado. Se ordenara antes de insertar para mantener el orden.\n");
+                    ordenarArreglo(miArreglo, cantidadActual);
+                    es_ordenado_flag = 1;
+                }
+                insertarElemento(miArreglo, &cantidadActual, TAM_MAX, elemento, (tipo_insercion == 1));
+                break;
+            case 6:
+                printf("Ingrese el elemento a eliminar: ");
+                scanf("%d", &elemento);
+                eliminarElemento(miArreglo, &cantidadActual, elemento);
+                break;
+            case 7:
+                ordenarArreglo(miArreglo, cantidadActual);
+                es_ordenado_flag = 1; // Después de ordenar, el arreglo está ordenado.
+                break;
+            case 0:
+                printf("Saliendo del programa. ¡Hasta luego!\n");
+                break;
+            default:
+                printf("Opcion invalida. Por favor, intente de nuevo.\n");
+                break;
+        }
+    } while (opcion != 0);
+
+    return 0;
+}
