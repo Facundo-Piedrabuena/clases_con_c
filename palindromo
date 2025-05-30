@@ -1,0 +1,35 @@
+#include <stdbool.h>
+#include <string.h>
+#include <ctype.h>
+
+bool esPalindromo(const char *cadena) {
+    int inicio = 0;
+    int fin = strlen(cadena) - 1;
+
+    while (inicio < fin) {
+        while (!isalpha(cadena[inicio]) && inicio < fin) {
+            inicio++;
+        }
+        while (!isalpha(cadena[fin]) && inicio < fin) {
+            fin--;
+        }
+        if (tolower(cadena[inicio]) != tolower(cadena[fin])) {
+            return false;
+        }
+        inicio++;
+        fin--;
+    }
+    return true;
+}
+
+int main() {
+/*Declaracion de variables y cadenas*/
+
+
+ if (esPalindromo("Anita lava la tina")) {
+    printf("Es palíndromo.\n");
+} else {
+    printf("No es palíndromo.\n");
+}
+	return 0;
+}
