@@ -1,0 +1,100 @@
+#include <stdio.h>  // Para printf
+#include <string.h> // Para strlen, strstr
+#include <ctype.h>  // Para tolower, si se necesitara insensibilidad a mayúsculas/minúsculas
+
+#define MAX_LONGITUD_CADENA 200 // Un tamaño de búfer generoso para cadenas
+
+int contar_caracter_en_cadena(const char cadena[], char caracter_a_contar) {
+	/*
+	// Variables usadas en esta función:
+	// const char cadena[]: La cadena donde se buscará.
+	// char caracter_a_contar: El caracter específico a buscar.
+	// int contador = 0;: Para llevar la cuenta de las repeticiones.
+	// int i = 0;: Índice para recorrer la cadena.
+	*/
+	int contador = 0;
+	int i = 0;
+	
+	while (cadena[i] != '\0') {
+		if (cadena[i] == caracter_a_contar) {
+			contador++;
+		}
+		i++;
+	}
+	return contador;
+}
+
+// Función para contar cuántas veces se repite una palabra (subcadena) en una cadena
+// Retorna la cantidad de veces que la palabra aparece.
+// Nota: Esta implementación NO cuenta ocurrencias solapadas (ej. "aaaa" y buscar "aa").
+int contar_palabra_en_cadena(const char cadena_principal[], const char palabra_a_contar[]) {
+	/*
+	// Variables usadas en esta función:
+	// const char cadena_principal[]: La cadena donde se buscará la palabra.
+	// const char palabra_a_contar[]: La palabra o subcadena específica a buscar.
+	// int contador = 0;: Para llevar la cuenta de las repeticiones.
+	// const char *puntero_actual = cadena_principal;: Puntero para moverse por la cadena principal.
+	// const char *resultado_strstr;: Puntero para almacenar el resultado de strstr.
+	// size_t longitud_palabra = strlen(palabra_a_contar);: Longitud de la palabra a buscar.
+	*/
+	int contador = 0;
+	const char *puntero_actual = cadena_principal; // Empezamos a buscar desde el inicio
+	size_t longitud_palabra = strlen(palabra_a_contar);
+	
+	// Si la palabra a buscar está vacía o es más larga que la cadena principal, no puede estar.
+	if (longitud_palabra == 0 || longitud_palabra > strlen(cadena_principal)) {
+		return 0;
+	}
+	
+	// Usamos strstr para encontrar la palabra repetidamente
+	while ((puntero_actual = strstr(puntero_actual, palabra_a_contar)) != NULL) {
+		contador++;
+		// Mover el puntero más allá de la ocurrencia encontrada para evitar contar el mismo solapamiento
+		puntero_actual += longitud_palabra;
+	}
+	return contador;
+}
+
+
+int main() {
+	// --- Variables para la demostración de contar caracter ---
+	char texto_completo_caracter[MAX_LONGITUD_CADENA] = "murcielago y murcielaga, y otro murcielago mas.";
+	char letra_a_buscar = 'a';
+	int ocurrencias_letra;
+	
+	// --- Variables para la demostración de contar palabra ---
+	char texto_completo_palabra[MAX_LONGITUD_CADENA] = "El perro ladra. Otro perro muerde. Perro es un animal.";
+	char palabra_a_buscar[MAX_LONGITUD_CADENA] = "perro";
+	int ocurrencias_palabra;
+	
+	
+	printf("--- Conteo de Repeticiones en Cadenas ---\n\n");
+	
+	// 1) Demostración de contar_caracter_en_cadena
+	printf("1. Contar cuantas veces se repite un CARACTER:\n");
+	/*
+	// Variables usadas en esta demostración:
+	// char texto_completo_caracter[] = "murcielago y murcielaga, y otro murcielago mas."; // La cadena donde buscar
+	// char letra_a_buscar = 'a'; // El caracter a contar
+	// int ocurrencias_letra; // Para almacenar el resultado
+	*/
+	printf("   Cadena: \"%s\"\n", texto_completo_caracter);
+	printf("   Caracter a contar: '%c'\n", letra_a_buscar);
+	ocurrencias_letra = contar_caracter_en_cadena(texto_completo_caracter, letra_a_buscar);
+	printf("   El caracter '%c' aparece %d veces.\n\n", letra_a_buscar, ocurrencias_letra);
+	
+	// 2) Demostración de contar_palabra_en_cadena
+	printf("2. Contar cuantas veces se repite una PALABRA:\n");
+	/*
+	// Variables usadas en esta demostración:
+	// char texto_completo_palabra[] = "El perro ladra. Otro perro muerde. Perro es un animal."; // La cadena principal
+	// char palabra_a_buscar[] = "perro"; // La palabra a contar
+	// int ocurrencias_palabra; // Para almacenar el resultado
+	*/
+	printf("   Cadena: \"%s\"\n", texto_completo_palabra);
+	printf("   Palabra a contar: \"%s\"\n", palabra_a_buscar);
+	ocurrencias_palabra = contar_palabra_en_cadena(texto_completo_palabra, palabra_a_buscar);
+	printf("   La palabra \"%s\" aparece %d veces (sensible a mayusculas/minusculas).\n\n", palabra_a_buscar, ocurrencias_palabra);
+	
+	return 0;
+}
