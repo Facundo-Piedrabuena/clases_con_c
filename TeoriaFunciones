@@ -1,0 +1,81 @@
+### Resumen del Documento: Funciones y Procedimientos en C
+
+#### **Concepto de Función**
+- Una **función** es un subprograma que realiza una tarea específica, recibe datos (parámetros) y puede devolver un resultado.
+- **Ventajas**:
+  - Simplifica la comprensión del programa.
+  - Facilita la depuración y mantenimiento.
+  - Promueve la reutilización de código.
+  - Mejora la independencia entre módulos.
+
+#### **Modularidad, Cohesión y Acoplamiento**
+- **Modularidad**: Divide problemas complejos en partes más pequeñas (módulos) para facilitar su desarrollo y mantenimiento.
+- **Cohesión**: Cada módulo debe realizar una única tarea. Alta cohesión implica mejor diseño.
+- **Acoplamiento**: Mide la interdependencia entre módulos. Bajo acoplamiento es ideal para reducir complejidad.
+
+#### **Características de las Funciones en C**
+- El programa comienza con la función `main`.
+- Las funciones pueden llamarse desde cualquier parte del programa.
+- Pueden devolver un valor con `return` o no devolver nada (`void`).
+- Los parámetros pueden pasarse **por valor** (copia del dato) o **por referencia** (dirección de memoria).
+
+#### **Tipos de Funciones**
+1. **Funciones Predefinidas**: Integradas en el lenguaje (ej: `strlen`, `printf`).
+2. **Funciones Definidas por el Usuario**: Creadas para tareas específicas.
+
+#### **Procedimientos**
+- En C, se implementan como funciones de tipo `void` que no devuelven valores.
+- Ejemplo: `void imprimeValor()`.
+
+#### **Variables**
+- **Locales**: Declaradas dentro de una función, solo accesibles en su ámbito.
+- **Globales**: Declaradas fuera de funciones, accesibles desde cualquier parte del programa.
+
+#### **Declaración y Uso de Funciones**
+- **Sintaxis**:
+  ```c
+  tipo_devuelto nombre_funcion(tipo param1, tipo param2) {
+      // Código
+      return valor;
+  }
+  ```
+- **Ejemplo**:
+  ```c
+  int suma(int a, int b) {
+      return a + b;
+  }
+  ```
+
+#### **Pasaje de Parámetros**
+- **Por Valor**: Se pasa una copia del dato. La función no modifica el original.
+- **Por Referencia**: Se pasa la dirección de memoria (usando punteros). La función puede modificar el original.
+
+#### **Ejemplos Clave**
+1. **Función Suma**:
+   ```c
+   int suma(int a, int b) {
+       return a + b;
+   }
+   ```
+2. **Procedimiento `void`**:
+   ```c
+   void imprimeValor() {
+       printf("Hola");
+   }
+   ```
+3. **Función con Arreglos**:
+   ```c
+   int sumarArreglo(int a[], int n) {
+       int suma = 0;
+       for (int i = 0; i < n; i++) suma += a[i];
+       return suma;
+   }
+   ```
+
+#### **Buenas Prácticas**
+- Usar nombres descriptivos para funciones y variables.
+- Mantener alta cohesión y bajo acoplamiento.
+- Evitar el uso excesivo de variables globales.
+- Documentar el propósito de cada función.
+
+Este resumen destaca los conceptos esenciales para entender y aplicar funciones y procedimientos en C, enfatizando la modularidad y claridad del código.
