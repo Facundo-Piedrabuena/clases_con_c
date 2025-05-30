@@ -1,0 +1,17 @@
+#include <stdio.h>
+
+void mostrar_arreglo(int arr[], int cantidad) {
+    for(int i = 0; i < cantidad; i++) {
+        printf("%d ", arr[i]);
+    }
+}
+
+int main() {
+    int edades[] = {18, 21, 25, 30, 22};
+    int cantidad = sizeof(edades) / sizeof(edades[0]);
+    
+    // Pasamos la cantidad calculada como parámetro
+    mostrar_arreglo(edades, cantidad);
+    
+    return 0;
+}
