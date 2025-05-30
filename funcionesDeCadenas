@@ -1,0 +1,154 @@
+#include <stdio.h>  // Para funciones de entrada/salida como printf
+#include <string.h> // Contiene las funciones de manipulación de cadenas
+#include <stddef.h> // Para size_t
+
+// --- Declaraciones de variables globales o de uso común (solo para referencia en este formato) ---
+/*
+char cadena_principal_global[MAX_BUFFER_CADENA];
+char cadena_secundaria_global[MAX_BUFFER_CADENA];
+char cadena_resultado_global[MAX_BUFFER_CADENA];
+char caracter_global;
+char subcadena_global[MAX_BUFFER_CADENA];
+int  resultado_comparacion_global;
+char *puntero_char_global;
+char *puntero_subcadena_global;
+size_t longitud_global;
+*/
+
+#define MAX_BUFFER_CADENA 100 // Tamaño de buffer para las cadenas
+
+int main() {
+    // --- Declaración de variables para el 'main' y uso en varias demostraciones ---
+    char cadena_origen[MAX_BUFFER_CADENA] = "Ejemplo de cadena.";
+    char cadena_destino[MAX_BUFFER_CADENA]; // Se usará para strcpy y strcat
+    char cadena_para_concatenar[MAX_BUFFER_CADENA] = " Esto se agrega.";
+    char cadena_comparacion_1[MAX_BUFFER_CADENA] = "manzana";
+    char cadena_comparacion_2[MAX_BUFFER_CADENA] = "mango";
+    char cadena_busqueda_principal[MAX_BUFFER_CADENA] = "programacion en C es genial";
+
+
+    printf("--- Uso de Funciones de la Libreria <string.h> (Formato de Lectura) ---\n\n");
+
+    // 1) strcpy(): copia dos strings;
+    printf("1. Funcion strcpy(): Copiar una cadena.\n");
+    /*
+    // Declaración de variables para esta demostración:
+    char cadena_destino[MAX_BUFFER_CADENA]; // Será el destino de la copia
+    const char cadena_origen[] = "Ejemplo de cadena."; // El origen de la copia
+    */
+    printf("   Cadena origen: \"%s\"\n", cadena_origen);
+    strcpy(cadena_destino, cadena_origen); // Copia el contenido de cadena_origen a cadena_destino
+    printf("   Cadena destino despues de strcpy: \"%s\"\n\n", cadena_destino);
+
+
+    // 2) strcat(): agrega una cadena a otra;
+    printf("2. Funcion strcat(): Concatenar una cadena a otra.\n");
+    /*
+    // Declaración de variables para esta demostración:
+    // (cadena_destino ya contendría "Ejemplo de cadena." del paso anterior)
+    char cadena_destino[MAX_BUFFER_CADENA]; // El destino al que se agregará
+    const char cadena_para_concatenar[] = " Esto se agrega."; // La cadena a agregar
+    */
+    // Reiniciar cadena_destino para este ejemplo si se desea un punto de partida diferente al anterior
+    strcpy(cadena_destino, "Hola");
+    printf("   Cadena actual: \"%s\"\n", cadena_destino);
+    printf("   Cadena a agregar: \"%s\"\n", cadena_para_concatenar);
+    strcat(cadena_destino, cadena_para_concatenar); // Agrega cadena_para_concatenar al final de cadena_destino
+    printf("   Cadena despues de strcat: \"%s\"\n\n", cadena_destino);
+
+
+    // 3) strcmp(): compara una cadena con otra;
+    printf("3. Funcion strcmp(): Comparar dos cadenas.\n");
+    /*
+    // Declaración de variables para esta demostración:
+    const char cadena_comparacion_1[] = "manzana"; // Primera cadena a comparar
+    const char cadena_comparacion_2[] = "mango";   // Segunda cadena a comparar
+    int resultado_comparacion; // Almacenará el resultado de la comparación
+    */
+    printf("   Cadena 1: \"%s\"\n", cadena_comparacion_1);
+    printf("   Cadena 2: \"%s\"\n", cadena_comparacion_2);
+    int resultado_comparacion_local = strcmp(cadena_comparacion_1, cadena_comparacion_2); // Usamos un nombre local para evitar confusiones
+    if (resultado_comparacion_local == 0) {
+        printf("   Las cadenas son iguales.\n");
+    } else if (resultado_comparacion_local < 0) {
+        printf("   La cadena \"%s\" es lexicograficamente menor que \"%s\". (resultado: %d)\n", cadena_comparacion_1, cadena_comparacion_2, resultado_comparacion_local);
+    } else {
+        printf("   La cadena \"%s\" es lexicograficamente mayor que \"%s\". (resultado: %d)\n", cadena_comparacion_1, cadena_comparacion_2, resultado_comparacion_local);
+    }
+    printf("   Comparando \"Hola\" con \"Hola\": %d\n\n", strcmp("Hola", "Hola")); // Debería dar 0
+
+
+    // 4) strchr(): localiza primera instancia de un caracter dentro de un string;
+    printf("4. Funcion strchr(): Localizar la primera ocurrencia de un caracter.\n");
+    /*
+    // Declaración de variables para esta demostración:
+    const char cadena_busqueda_principal[] = "programacion en C es genial"; // Cadena donde buscar
+    char caracter_a_buscar = 'C'; // Caracter a encontrar
+    char *puntero_resultado_char; // Puntero que recibirá la dirección del caracter encontrado
+    */
+    char caracter_a_buscar_local = 'C'; // Variable local para el caracter
+    printf("   Cadena para buscar: \"%s\"\n", cadena_busqueda_principal);
+    printf("   Caracter a buscar: '%c'\n", caracter_a_buscar_local);
+    char *puntero_resultado_char_local = strchr(cadena_busqueda_principal, caracter_a_buscar_local);
+
+    if (puntero_resultado_char_local != NULL) {
+        printf("   Caracter '%c' encontrado en la posicion (indice): %ld\n", caracter_a_buscar_local, (long)(puntero_resultado_char_local - cadena_busqueda_principal));
+    } else {
+        printf("   Caracter '%c' no encontrado.\n", caracter_a_buscar_local);
+    }
+
+    caracter_a_buscar_local = 'z'; // Intentar buscar un caracter que no está
+    printf("   Caracter a buscar (no existe): '%c'\n", caracter_a_buscar_local);
+    puntero_resultado_char_local = strchr(cadena_busqueda_principal, caracter_a_buscar_local);
+    if (puntero_resultado_char_local != NULL) {
+        printf("   Caracter '%c' encontrado en la posicion (indice): %ld\n\n", caracter_a_buscar_local, (long)(puntero_resultado_char_local - cadena_busqueda_principal));
+    } else {
+        printf("   Caracter '%c' no encontrado.\n\n", caracter_a_buscar_local);
+    }
+
+
+    // 5) strstr(): localiza la primera ocurrencia de un string dentro de otro;
+    printf("5. Funcion strstr(): Localizar la primera ocurrencia de una subcadena.\n");
+    /*
+    // Declaración de variables para esta demostración:
+    const char cadena_busqueda_principal[] = "programacion en C es genial"; // Cadena principal (el "pajar")
+    const char subcadena_a_buscar[] = "genial"; // Subcadena a encontrar (la "aguja")
+    char *puntero_resultado_subcadena; // Puntero que recibirá la dirección de la subcadena encontrada
+    */
+    char subcadena_a_buscar_local[MAX_BUFFER_CADENA] = "genial"; // Variable local para la subcadena
+    printf("   Cadena principal: \"%s\"\n", cadena_busqueda_principal);
+    printf("   Subcadena a buscar: \"%s\"\n", subcadena_a_buscar_local);
+    char *puntero_resultado_subcadena_local = strstr(cadena_busqueda_principal, subcadena_a_buscar_local);
+
+    if (puntero_resultado_subcadena_local != NULL) {
+        printf("   Subcadena \"%s\" encontrada en la posicion (indice): %ld\n", subcadena_a_buscar_local, (long)(puntero_resultado_subcadena_local - cadena_busqueda_principal));
+    } else {
+        printf("   Subcadena \"%s\" no encontrada.\n", subcadena_a_buscar_local);
+    }
+
+    strcpy(subcadena_a_buscar_local, "inexistente"); // Intentar buscar una subcadena que no está
+    printf("   Subcadena a buscar (no existe): \"%s\"\n", subcadena_a_buscar_local);
+    puntero_resultado_subcadena_local = strstr(cadena_busqueda_principal, subcadena_a_buscar_local);
+    if (puntero_resultado_subcadena_local != NULL) {
+        printf("   Subcadena \"%s\" encontrada en la posicion (indice): %ld\n\n", subcadena_a_buscar_local, (long)(puntero_resultado_subcadena_local - cadena_busqueda_principal));
+    } else {
+        printf("   Subcadena \"%s\" no encontrada.\n\n", subcadena_a_buscar_local);
+    }
+
+
+    // 6) strlen(): determina la longitud de un string.
+    printf("6. Funcion strlen(): Determinar la longitud de una cadena.\n");
+    /*
+    // Declaración de variables para esta demostración:
+    // (cadena_origen ya está declarada y contiene "Ejemplo de cadena.")
+    size_t longitud_cadena; // Variable para almacenar la longitud
+    */
+    printf("   Cadena: \"%s\"\n", cadena_origen);
+    size_t longitud_cadena_local = strlen(cadena_origen);
+    printf("   Longitud de la cadena: %zu\n", longitud_cadena_local);
+
+    printf("   Longitud de \"\": %zu\n\n", strlen("")); // Longitud de una cadena vacía es 0
+
+
+    return 0;
+}
