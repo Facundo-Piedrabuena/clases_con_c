@@ -1,0 +1,118 @@
+#include <stdio.h>
+
+#define MAX_ELEMENTOS 100 // Tamaño máximo del arreglo
+
+// Búsqueda Binaria (requiere arreglo ordenado)
+int buscarBinario(int arr[], int num_actual, int objetivo) {
+    int bajo = 0;
+    int alto = num_actual - 1;
+    int medio;
+    int encontrado_en_indice = -1;
+
+    while (bajo <= alto) {
+        medio = bajo + (alto - bajo) / 2;
+        if (arr[medio] == objetivo) {
+            encontrado_en_indice = medio;
+            break;
+        } else if (arr[medio] < objetivo) {
+            bajo = medio + 1;
+        } else {
+            alto = medio - 1;
+        }
+    }
+    return encontrado_en_indice;
+}
+
+// Ordenamiento Burbuja (de menor a mayor)
+void ordenarBurbuja(int arr[], int num_actual) {
+    int i, j;
+    int auxiliar_temp; // Variable temporal para el intercambio
+
+    if (num_actual <= 1) {
+        printf("Arreglo vacio o con un solo elemento, ya esta ordenado.\n");
+        return;
+    }
+
+    for (i = 0; i < num_actual - 1; i++) {
+        for (j = 0; j < num_actual - 1 - i; j++) {
+            if (arr[j] > arr[j+1]) { // Si el elemento actual es mayor que el siguiente
+                // Intercambio de elementos
+                auxiliar_temp = arr[j];
+                arr[j] = arr[j+1];
+                arr[j+1] = auxiliar_temp;
+            }
+        }
+    }
+    printf("Arreglo ordenado de menor a mayor usando Bubble Sort.\n");
+
+    // COMENTARIO: Para ordenar de MAYOR a MENOR, cambia la condición del 'if':
+    // if (arr[j] < arr[j+1]) { // Si el elemento actual es MENOR que el siguiente
+    //     // Realiza el mismo intercambio para poner el mayor primero
+    //     auxiliar_temp = arr[j];
+    //     arr[j] = arr[j+1];
+    //     arr[j+1] = auxiliar_temp;
+    // }
+}
+
+// --- Función Principal (Ejemplo de Uso) ---
+int main() {
+    int mi_arreglo[MAX_ELEMENTOS];
+    int cantidad_actual = 0;
+    int opcion_menu;
+    int valor_a_buscar;
+    int posicion_encontrada;
+
+    // Carga de ejemplo
+    mi_arreglo[0] = 50;
+    mi_arreglo[1] = 10;
+    mi_arreglo[2] = 40;
+    mi_arreglo[3] = 20;
+    mi_arreglo[4] = 30;
+    cantidad_actual = 5;
+
+    printf("Arreglo inicial: ");
+    for (int k = 0; k < cantidad_actual; k++) {
+        printf("%d ", mi_arreglo[k]);
+    }
+    printf("\n");
+
+    do {
+        printf("\n--- MENU DE OPERACIONES ---\n");
+        printf("1. Ordenar arreglo (Bubble Sort Ascendente)\n");
+        printf("2. Buscar elemento (con busqueda binaria)\n");
+        printf("0. Salir\n");
+        printf("Seleccione una opcion: ");
+        scanf("%d", &opcion_menu);
+
+        switch (opcion_menu) {
+            case 1:
+                ordenarBurbuja(mi_arreglo, cantidad_actual);
+                printf("Arreglo despues de ordenar: ");
+                for (int k = 0; k < cantidad_actual; k++) {
+                    printf("%d ", mi_arreglo[k]);
+                }
+                printf("\n");
+                break;
+            case 2:
+                printf("Ingrese el valor a buscar: ");
+                scanf("%d", &valor_a_buscar);
+                // IMPORTANTE: La búsqueda binaria solo funciona correctamente si el arreglo está ordenado.
+                // Asegúrese de ejecutar la opción 1 antes de usar esta opción si el arreglo no está ordenado.
+                posicion_encontrada = buscarBinario(mi_arreglo, cantidad_actual, valor_a_buscar);
+                if (posicion_encontrada != -1) {
+                    printf("El elemento %d fue encontrado en la posicion (indice) %d.\n", valor_a_buscar, posicion_encontrada);
+                } else {
+                    printf("El elemento %d NO fue encontrado en el arreglo.\n", valor_a_buscar);
+                }
+                break;
+            case 0:
+                printf("Saliendo del programa. ¡Adios!\n");
+                break;
+            default:
+                printf("Opcion no valida. Intente de nuevo.\n");
+                break;
+        }
+    } while (opcion_menu != 0);
+
+    return 0;
+}
