@@ -1,0 +1,89 @@
+#include <stdio.h>
+#include <string.h>
+#define N 4
+
+void cargarMatriz(int matriz[N][N], int a);
+void mostrarMatriz(int matriz[N][N], int a);
+int cargarArreglo(int matriz[N][N], int a, int arreglo[]);
+void mostrarArreglo(int arreglo[], int cantidad);
+void ordenamientoBurbuja(int arreglo[], int a);
+void mostrarArreglo2(int arreglo[], int a);
+
+int main() {
+	int matriz[N][N];
+	int arreglo[16];
+	int cantidad;
+	
+	cargarMatriz(matriz, N);
+	mostrarMatriz(matriz, N);
+	cantidad = cargarArreglo(matriz, N, arreglo);
+	mostrarArreglo(arreglo, cantidad);
+	printf("Cantidad de numeros divisibles por 4: %d\n", cantidad);
+	ordenamientoBurbuja(arreglo, cantidad);
+	mostrarArreglo2(arreglo, cantidad);
+	
+	return 0;
+}
+
+void cargarMatriz(int matriz[N][N], int a) {
+	int i, j;
+	for (i = 0; i < a; i++) {
+		for (j = 0; j < a; j++) {
+			printf("Ingrese un valor para matriz[%d][%d]: ", i, j);
+			scanf("%d", &matriz[i][j]);
+		}
+	}
+}
+
+void mostrarMatriz(int matriz[N][N], int a) {
+	int i, j;
+	for (i = 0; i < a; i++) {
+		for (j = 0; j < a; j++) {
+			printf("%d\t", matriz[i][j]);
+		}
+		printf("\n");
+	}
+}
+
+int cargarArreglo(int matriz[N][N], int a, int arreglo[]) {
+	int i, j, k = 0;
+	for (i = 0; i < a; i++) {
+		for (j = 0; j < a; j++) {
+			if (matriz[i][j] % 4 == 0) {
+				arreglo[k++] = matriz[i][j];  
+			}
+		}
+	}
+	return k;
+}
+
+void mostrarArreglo(int arreglo[], int cantidad) {
+	int i;
+	printf("Numeros divisibles por 4: ");
+	for (i = 0; i < cantidad; i++) {
+		printf("%d ", arreglo[i]);
+	}
+	printf("\n");
+}
+void ordenamientoBurbuja(int arreglo[], int a){
+	int i, j;
+	int temp;
+	for(i=0;i<a-1;i++){
+		for (j=0;j<a-i-1;j++){
+			if (arreglo[j]<arreglo[j+1]){
+				temp = arreglo[j];
+				arreglo[j] = arreglo[j+1];
+				arreglo[j+1] = temp;
+			}
+		}
+	}
+}
+void mostrarArreglo2(int arreglo[], int a){
+	int i;
+	printf("Arreglo ordenado de mayor a menor: ");
+	for (i=0;i<a;i++){
+		printf("%d", arreglo[i]);
+		printf(" - ");
+	}
+	printf(".");
+}
