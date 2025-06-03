@@ -1,37 +1,63 @@
 #include <stdio.h>
 
+// Declaración de la función (prototipo) - esto ya estaba bien, pero se refuerza su posición global.
 int lcmCalculate(int a, int b);
 
 int main() {
-  int n1, n2, lcmOf;
+    int n1, n2, lcmOf; // Declaraciones de variables al principio del bloque
 
-  printf("InIn Recursion : Find the LCM of two numbers \n");
-  printf("------------------------------------------\n");
-  printf(" Input 1st number for LCM : ");
-  scanf("%d", &n1);
-  printf(" Input 2nd number for LCM : ");
-  scanf("%d", &n2);
+    printf("InIn Recursion : Find the LCM of two numbers \n");
+    printf("------------------------------------------\n");
+    printf(" Input 1st number for LCM : ");
+    scanf("%d", &n1);
+    printf(" Input 2nd number for LCM : ");
+    scanf("%d", &n2);
 
-  // Ensures that first parameter of lcm must be smaller than 2nd
-  if (n1 > n2) {
-    lcmOf = lcmCalculate(n2, n1); //call the function lcmCalculate for lcm calculation
-  } else {
-    lcmOf = lcmCalculate(n1, n2); //call the function lcmCalculate for lcm calculation
-  }
-  printf(" The LCM of %d and %d : %d\n", n1, n2, lcmOf);
-  return 0;
+    // Ensures that first parameter of lcm must be smaller than 2nd
+    if (n1 > n2) {
+        lcmOf = lcmCalculate(n2, n1); //call the function lcmCalculate for lcm calculation
+    } else {
+        lcmOf = lcmCalculate(n1, n2); //call the function lcmCalculate for lcm calculation
+    }
+    printf(" The LCM of %d and %d : %d\n", n1, n2, lcmOf);
+    return 0;
 }
 
+// Definición de la función lcmCalculate - ahora está fuera de main, a nivel global.
 int lcmCalculate(int a, int b) {
-  static int m = 0; // The recursive function lcm() takes two integer numbers as arguments. Take a static variable m and initialize it to zero, then update it with one of the numbers. Here we are going to update the variable m with b, because the variable m will always be divisible by the variable b. For this to happen, we only need to verify that m is divisible by a. (m%a == 0).
+    // La variable static m debe mantenerse así para la recursividad.
+    // La inicialización de 'm' debe ser fuera de la función o condicionada para que solo se haga una vez.
+    // Para el cálculo de LCM con recursividad, 'm' necesita acumularse.
+    // Una forma de manejar la inicialización en una función recursiva 'static' es:
+    static int m_val = 0; // Usamos otro nombre para evitar conflicto si 'm' fuera una variable de parámetro
 
-  // Increments m by adding max value to it
-  m = m + b;
+    // Si es la primera llamada a la función (o cuando el valor no ha sido inicializado para esta serie de llamadas)
+    // Esto es un poco delicado con 'static' y recursividad para LCM si queremos que se resetee para cada par de números.
+    // Una mejor aproximación para el LCM recursivo es pasar el valor actual o usar un envoltorio.
+    // Sin embargo, si la lógica de 'static int m' está diseñada para un caso específico donde 'm' se mantiene
+    // entre múltiples llamadas a lcmCalculate (no solo para un único par de n1, n2), entonces se dejaría así.
+    // Pero asumiendo que quieres el LCM para *cada* par de (n1, n2) que introduces, la variable 'm'
+    // debería reiniciarse de alguna manera para cada nueva invocación de lcmCalculate en main.
+    // Como está en tu código original, 'm' solo se inicializa a 0 una vez al inicio del programa.
+    // Si ejecutas el programa dos veces, 'm' mantendrá su último valor.
 
-  // Find a common multiple then return the m.
-  if ((m % a == 0) && (m % b == 0)) {
-    return m;
-  } else {
-    lcmCalculate(a, b); //calling the function lcmCalculate itself
-  }
+    // Para la lógica original y para que el static funcione para cada 'nuevo' par de números,
+    // la inicialización de 'm' a 'b' (o 'a' dependiendo de la lógica inicial) es crucial
+    // para que la primera llamada establezca la base para la recursión.
+    // Una implementación común de LCM recursivo no usa 'static' así.
+    // Pero siguiendo tu lógica original de 'm = m + b;':
+    if (m_val == 0) { // Si es la primera vez que se llama o se ha reiniciado
+        m_val = b; // Inicializa 'm_val' con el segundo número para empezar la suma
+    } else {
+        m_val = m_val + b; // Continúa sumando
+    }
+
+    if ((m_val % a == 0) && (m_val % b == 0)) {
+        int result = m_val; // Guardamos el resultado antes de resetear m_val si es necesario
+        m_val = 0; // Reiniciar para la siguiente llamada a lcmCalculate desde main
+        return result;
+    } else {
+        // Asegúrate de que la llamada recursiva devuelva su valor
+        return lcmCalculate(a, b);
+    }
 }
