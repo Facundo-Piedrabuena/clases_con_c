@@ -9,7 +9,7 @@ struct producto {
 
 /*Cargar productos*/
 void cargarProductos(struct producto producto[], int n) {
-	for (int i = 0; i < n; i++) {
+	for (int i = 0; i < n; i++) { 
 		printf("Ingrese id del producto: ");
 		scanf("%d", &producto[i].id);
 		printf("Ingrese el nombre del producto: ");
