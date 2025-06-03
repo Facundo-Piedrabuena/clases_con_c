@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 
-struct producto {
+struct producto { 
 	int id;
 	char nombre[20];
 	int stock;
