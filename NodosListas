@@ -1,87 +1,138 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// Definición de la estructura del nodo
+/*Definición de la estructura del nodo*/
 struct Nodo {
-    int dato;
-    struct Nodo* siguiente;
+	int dato;
+	struct Nodo* siguiente;
 };
 
-// Función para crear un nuevo nodo
+/*Función para crear un nuevo nodo*/
 struct Nodo* crearNodo(int valor) {
-    struct Nodo* nuevo = (struct Nodo*) malloc(sizeof(struct Nodo));
-    if (nuevo == NULL) {
-        printf("Error: no se pudo asignar memoria.\n");
-        exit(1);
-    }
-    nuevo->dato = valor;
-    nuevo->siguiente = NULL;
-    return nuevo;
+	struct Nodo* nuevo = (struct Nodo*) malloc(sizeof(struct Nodo));
+	if (nuevo == NULL) {
+		printf("Error: no se pudo asignar memoria.\n");
+		exit(1);
+	}
+	nuevo->dato = valor;
+	nuevo->siguiente = NULL;
+	return nuevo;
 }
 
-// Función para agregar un nodo al final
+/*Función para agregar un nodo al final*/
 void agregarAlFinal (struct Nodo** cabeza, int valor) {
-    struct Nodo* nuevo = crearNodo(valor);
-    if (*cabeza == NULL) {
-        *cabeza = nuevo;
-    } else {
-        struct Nodo* actual = *cabeza;
-        while (actual->siguiente != NULL) {
-            actual = actual->siguiente;
-        }
-        actual->siguiente = nuevo;
-    }
+	struct Nodo* nuevo = crearNodo(valor);
+	if (*cabeza == NULL) {
+		*cabeza = nuevo;
+	} else {
+		struct Nodo* actual = *cabeza;
+		while (actual->siguiente != NULL) {
+			actual = actual->siguiente;
+		}
+		actual->siguiente = nuevo;
+	}
 }
 
-// Función para imprimir la lista
+/*Funcion para agregar un nodo al principio*/
+void  agregarAlPrincipio (struct Nodo** cabeza, int valor) {
+	struct Nodo* nuevo = crearNodo(valor);
+	nuevo->siguiente = *cabeza;
+	*cabeza = nuevo;
+}
+
+/*Funcion para agregar un nodo en una posicion especifica*/
+void insertarEnMedio(struct Nodo** cabeza, int valor, int posicion) {
+	struct Nodo* nuevo = crearNodo(valor);
+	struct Nodo* actual = *cabeza;
+	int contador = 0;
+	
+	/*Si la posición es 0, insertamos al principio*/
+	if (posicion == 0 || *cabeza == NULL) {
+		agregarAlPrincipio(cabeza, valor);
+		return;
+	}
+	
+	/*Recorrer la lista hasta la posición anterior a la de inserción*/
+	/* o hasta el final si la posición es mayor que la longitud de la lista */
+	while (actual != NULL && contador < posicion - 1) {
+		actual = actual->siguiente;
+		contador++;
+	}
+	
+	/*Si actual es NULL, significa que la posición es mayor que la longitud de la lista - 1*/
+	/* En este caso, insertamos al final*/
+	if (actual == NULL) {
+		agregarAlFinal(cabeza, valor); /*Redireccionamos a agregarAlFinal si la posición excede*/
+	} else {
+		/*Insertar el nuevo nodo entre actual y actual->siguiente*/
+		nuevo->siguiente = actual->siguiente;
+		actual->siguiente = nuevo;
+	}
+}
+
+/*Función para imprimir la lista*/
 void imprimirLista (struct Nodo* cabeza) {
-    printf("Lista: ");
-    while (cabeza != NULL) {
-        printf("%d -> ", cabeza->dato);
-        cabeza = cabeza->siguiente;
-    }
-    printf("NULL\n");
+	printf("Lista: ");
+	while (cabeza != NULL) {
+		printf("%d -> ", cabeza->dato);
+		cabeza = cabeza->siguiente;
+	}
+	printf("NULL\n");
 }
 
-// Liberar memoria
+/*Liberar memoria*/
 void liberarLista (struct Nodo* cabeza) {
-    struct Nodo* temp;
-    while (cabeza != NULL) {
-        temp = cabeza;
-        cabeza = cabeza->siguiente;
-        free(temp);
-    }
+	struct Nodo* temp;
+	while (cabeza != NULL) {
+		temp = cabeza;
+		cabeza = cabeza->siguiente;
+		free(temp);
+	}
 }
 
 int main() {
-    struct Nodo* lista = NULL;
-    int opcion, valor;
-
-    do {
-        printf("\n--- MENU ---\n");
-        printf("1. Agregar nodo\n");
-        printf("2. Mostrar lista\n");
-        printf("3. Salir\n");
-        printf("Seleccione una opcion: ");
-        scanf("%d", &opcion);
-
-        switch (opcion) {
-            case 1:
-                printf("Ingrese el valor del nodo: ");
-                scanf("%d", &valor);
-                agregarAlFinal(&lista, valor);
-                break;
-            case 2:
-                imprimirLista(lista);
-                break;
-            case 3:
-                printf("Saliendo del programa.\n");
-                break;
-            default:
-                printf("Opcion invalida. Intente de nuevo.\n");
-        }
-    } while (opcion != 3);
-
-    liberarLista(lista);
-    return 0;
+	struct Nodo* lista = NULL;
+	int opcion, valor, posicion;
+	
+	do {
+		printf("\n--- MENU ---\n");
+		printf("1. Agregar nodo\n");
+		printf("2. Agregar nodo al principio\n");
+		printf("3. Agregar nodo en una posicion especifica\n");
+		printf("4. Mostrar lista\n");
+		printf("5. Salir\n");
+		printf("Seleccione una opcion: ");
+		scanf("%d", &opcion);
+		
+		switch (opcion) {
+		case 1:
+			printf("Ingrese el valor del nodo: ");
+			scanf("%d", &valor);
+			agregarAlFinal(&lista, valor);
+			break;
+		case 2:
+			printf("Ingrese el valor del nodo a agregar al principio: ");
+			scanf("%d", &valor);
+			agregarAlPrincipio(&lista, valor);
+			break;
+		case 3:
+			printf("Ingrese el valor del nodo a insertar: ");
+			scanf("%d", &valor);
+			printf("Ingrese la posicion donde desea insertar: ");
+			scanf("%d", &posicion);
+			insertarEnMedio(&lista, valor, posicion);
+			break;
+		case 4:
+			imprimirLista(lista);
+			break;
+		case 5:
+			printf("Saliendo del programa.\n");
+			break;
+		default:
+			printf("Opcion invalida. Intente de nuevo.\n");
+		}
+	} while (opcion != 3);
+	
+	liberarLista(lista);
+	return 0;
 }
