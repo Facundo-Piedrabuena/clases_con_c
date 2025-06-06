@@ -70,6 +70,46 @@ void insertarEnMedio(struct Nodo** cabeza, int valor, int posicion) {
 	}
 }
 
+/**
+ * @brief Elimina la primera ocurrencia de un valor dado en la lista.
+ * * @param cabeza Puntero al puntero del primer nodo de la lista.
+ * @param valor El valor a eliminar.
+ */
+void eliminarValor(struct Nodo** cabeza, int valor) {
+    if (*cabeza == NULL) {
+        printf("La lista esta vacia, no se puede eliminar.\n");
+        return;
+    }
+
+    struct Nodo* actual = *cabeza;
+    struct Nodo* anterior = NULL;
+
+    // Si el nodo a eliminar es la cabeza
+    if (actual != NULL && actual->dato == valor) {
+        *cabeza = actual->siguiente;
+        free(actual);
+        printf("Valor %d eliminado correctamente.\n", valor);
+        return;
+    }
+
+    // Buscar el nodo a eliminar, manteniendo rastro del nodo anterior
+    while (actual != NULL && actual->dato != valor) {
+        anterior = actual;
+        actual = actual->siguiente;
+    }
+
+    // Si el valor no fue encontrado en la lista
+    if (actual == NULL) {
+        printf("El valor %d no se encontro en la lista.\n", valor);
+        return;
+    }
+
+    // Desenlazar el nodo de la lista y liberarlo
+    anterior->siguiente = actual->siguiente;
+    free(actual);
+    printf("Valor %d eliminado correctamente.\n", valor);
+}
+
 /*Función para imprimir la lista*/
 void imprimirLista (struct Nodo* cabeza) {
 	printf("Lista: ");
@@ -96,11 +136,12 @@ int main() {
 	
 	do {
 		printf("\n--- MENU ---\n");
-		printf("1. Agregar nodo\n");
+		printf("1. Agregar nodo al final\n");
 		printf("2. Agregar nodo al principio\n");
 		printf("3. Agregar nodo en una posicion especifica\n");
-		printf("4. Mostrar lista\n");
-		printf("5. Salir\n");
+		printf("4. Eliminar valor\n"); // Nueva opción
+		printf("5. Mostrar lista\n");
+		printf("6. Salir\n");
 		printf("Seleccione una opcion: ");
 		scanf("%d", &opcion);
 		
@@ -122,16 +163,21 @@ int main() {
 			scanf("%d", &posicion);
 			insertarEnMedio(&lista, valor, posicion);
 			break;
-		case 4:
+        case 4: // Case para la nueva opción de eliminar
+            printf("Ingrese el valor a eliminar: ");
+            scanf("%d", &valor);
+            eliminarValor(&lista, valor);
+            break;
+		case 5:
 			imprimirLista(lista);
 			break;
-		case 5:
+		case 6:
 			printf("Saliendo del programa.\n");
 			break;
 		default:
 			printf("Opcion invalida. Intente de nuevo.\n");
 		}
-	} while (opcion != 3);
+	} while (opcion != 6); // Se cambió la condición para salir del bucle
 	
 	liberarLista(lista);
 	return 0;
