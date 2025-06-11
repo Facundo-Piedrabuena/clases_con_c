@@ -8,7 +8,7 @@
 struct Movie
 {
     char title[TITLE_LENGTH]; 
-    int year;
+    int year; 
     char director[DIRECTOR_LENGTH];
 } Movie;
 
