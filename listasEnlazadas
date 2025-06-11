@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define TITLE_LENGTH 100
+#define TITLE_LENGTH 100 
 #define DIRECTOR_LENGTH 100
 
 struct Movie
