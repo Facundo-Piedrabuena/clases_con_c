@@ -1,0 +1,49 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define TITLE_LENGTH 100
+#define DIRECTOR_LENGTH 100
+
+struct Movie
+{
+    char title[TITLE_LENGTH];
+    int year;
+    char director[DIRECTOR_LENGTH];
+} Movie;
+
+struct Node
+{
+    struct Movie movie;
+    struct Node* next;
+} Node;
+
+struct Node* createNode(const char *title, int year, const char *director)
+{
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    if (newNode == NULL)
+    {
+        printf("Memory allocator failer\n");
+        exit(1);
+    }
+    strncpy(newNode->movie.title, title, TITLE_LENGTH);
+    newNode->movie.title[TITLE_LENGTH - 1] = '\0';
+    newNode->movie.year = year;
+    strncpy(newNode->movie.director, director, DIRECTOR_LENGTH);
+    newNode->movie.director[DIRECTOR_LENGTH - 1] = '\0';
+}
+
+void insertAtBeginning(struct Node** cabeza, const char *title, int year, const char *director)
+{
+    struct Node* newNode = createNode(title, year, director);
+    newNode->next = *head;
+    *head = newNode;
+}
+
+int main () {
+    Node* head = NULL;
+    insertAtBeginning(&head, "Titulo de prueba", 2023, "director de prueba");
+    insertAtBeginning(&head, "Titulo de prueba", 2023, "director de prueba");
+    insertAtBeginning(&head, "Titulo de prueba", 2023, "director de prueba");
+    return 0;
+}
