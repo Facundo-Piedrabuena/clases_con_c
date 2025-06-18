@@ -1,0 +1,96 @@
+/*Ejercicio3: Archivos.
+	dados dos archivos se desea generar arch 3 que contiene informacion de arch1 y arch2.
+	arch3 debe estar ordenado por dni, arch1 y arch2 ya estan ordenados por dni.
+	Al final indicar los siguientes totales:
+	cantidad de registros de arch3
+	cantidad de registros que no fueron cargados en arch3. ejemplo dni repetido.
+	cant de registros de arch1 y cantidad de registros de arch2.*/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+struct Alumno {
+	int dni;
+	char apellido[20];
+	char nombre[20];
+	float nota;
+};
+
+int leerRegistro(FILE *f, struct Alumno *a) {
+	return fread(a, sizeof(struct Alumno), 1, f);
+}
+
+void escribirRegistro(FILE *f, struct Alumno *a) {
+	fwrite(a, sizeof(struct Alumno), 1, f);
+}
+
+void intercalarArchivos(FILE *a1, FILE *a2, FILE *a3,
+	int *cant1, int *cant2, int *cant3, int *noCargados) {
+	struct Alumno reg1, reg2;
+	int leyo1 = leerRegistro(a1, &reg1);
+	int leyo2 = leerRegistro(a2, &reg2);
+	
+	while (leyo1 && leyo2) {
+		(*cant1)++;
+	(*cant2)++;
+		
+		if (reg1.dni < reg2.dni) {
+			escribirRegistro(a3, &reg1);
+			(*cant3)++;
+			leyo1 = leerRegistro(a1, &reg1);
+		} else if (reg1.dni > reg2.dni) {
+			escribirRegistro(a3, &reg2);
+			(*cant3)++;
+			leyo2 = leerRegistro(a2, &reg2);
+		} else { /*dni iguales*/
+			escribirRegistro(a3, &reg1); /*guardar solo uno*/
+			(*cant3)++;
+			(*noCargados)++; /*uno se descarta*/
+			leyo1 = leerRegistro(a1, &reg1);
+			leyo2 = leerRegistro(a2, &reg2);
+		}
+	}
+	
+	/*Si quedan registros en arch1*/
+	while (leyo1) {
+		(*cant1)++;
+	escribirRegistro(a3, &reg1);
+	(*cant3)++;
+	leyo1 = leerRegistro(a1, &reg1);
+	}
+	
+	/*Si quedan registros en arch2*/
+	while (leyo2) {
+		(*cant2)++;
+	escribirRegistro(a3, &reg2);
+	(*cant3)++;
+	leyo2 = leerRegistro(a2, &reg2);
+	}
+}
+
+int main() {
+	FILE *arch1 = fopen("arch1.dat", "rb");
+	FILE *arch2 = fopen("arch2.dat", "rb");
+	FILE *arch3 = fopen("arch3.dat", "wb");
+	
+	int cant1 = 0, cant2 = 0, cant3 = 0, noCargados = 0;
+	
+	if (!arch1 || !arch2 || !arch3) {
+		printf("Error al abrir los archivos.\n");
+		return 1;
+	}
+	
+	intercalarArchivos(arch1, arch2, arch3, &cant1, &cant2, &cant3, &noCargados);
+	
+	fclose(arch1);
+	fclose(arch2);
+	fclose(arch3);
+	
+	printf("=== Totales ===\n");
+	printf("Cantidad de registros de arch1: %d\n", cant1);
+	printf("Cantidad de registros de arch2: %d\n", cant2);
+	printf("Cantidad total en arch3: %d\n", cant3);
+	printf("Cantidad de registros NO cargados en arch3: %d\n", noCargados);
+	
+	return 0;
+}
