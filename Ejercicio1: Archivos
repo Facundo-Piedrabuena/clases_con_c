@@ -1,0 +1,74 @@
+/*Generar un archivo binario cuyos campos son: */
+/*	dni, apell, nombre y nota.*/
+/*Mostrar su contenido por pantalla*/
+/*Ingresar por pantalla la cantidad de alumnos a cargar*/
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+struct Alumno{
+	int dni;
+	char apellido[50];
+	char nombre[50];
+	float nota;
+};
+
+void cargarArchivo(const char *nombreArchivo, int cantidad){
+	struct Alumno a;
+	int i;
+	FILE *archivo = fopen(nombreArchivo, "wb");
+	if(archivo == NULL) {
+		printf("No se pudo generar el archivo.\n");
+		exit(1);
+	}
+	
+	for (i=0;i<cantidad;i++){
+		printf("\nAlumno %d:\n", i+1);
+		printf("DNI: ");
+		scanf("%d", &a.dni);
+		printf("Apellido: ");
+		scanf("%s",a.apellido);
+		printf("Nombre: ");
+		scanf("%s", a.nombre);
+		printf("Nota: ");
+		scanf("%f", &a.nota);
+		
+		fwrite(&a, sizeof(struct Alumno), 1, archivo);
+	}
+	fclose(archivo);
+}
+
+void mostrarArchivo(const char *nombreArchivo){
+	struct Alumno a;
+	FILE *archivo = fopen(nombreArchivo, "rb");
+	if(archivo == NULL){
+		printf("No se pudo abrir el archivo.\n");
+		exit(1);
+	}
+	
+	printf("\nContenido del archivo\n");
+	while (fread(&a, sizeof(struct Alumno), 1, archivo) == 1){
+		printf("\nDNI: %d\n", a.dni);
+		printf("Apellido: %s\n", a.apellido);
+		printf("Nombre: %s\n", a.nombre);
+		printf("Nota: %.2f\n", a.nota);
+	}
+	fclose(archivo);
+}
+
+void cargarArchivo(const char *nombreArchivo, int cantidad);
+void mostrarArchivo(const char *nombreArchivo);
+
+int main() {
+	int cantidad;
+	
+	printf("Ingrese la cantidad de alumnos: ");
+	scanf("%d", &cantidad);
+	
+	cargarArchivo("alumnos.dat", cantidad);
+	mostrarArchivo("alumnos.dat");
+	
+	return 0;
+}
+
