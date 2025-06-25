@@ -1,0 +1,254 @@
+1. Tipos de estructuras de datos
+Estáticas:
+-Su tamaño se define antes de ejecutar el programa
+-No pueden cambiar de tamaño mientras el programa corre.
+-Ej: Arreglos (arrays).
+
+Dinámicas:
+-Su tamaño puede cambiar durante la ejecución.
+-No tienen límite fijo (solo el de la memoria disponible).
+-Se usan punteros y funciones como malloc.
+
+2. Punteros
+-Son variables que almacenan direcciones de memoria de otras variables.
+-Permiten trabajar con estructuras dinámicas.
+-Un puntero "apunta" a un dato en memoria.
+
+3. Estructuras de datos lineales
+Estas estructuras almacenan datos en forma secuencial y cada elemento tiene un único anterior y un único siguiente.
+Incluye:
+-Listas enlazadas
+-Pilas
+-Colas
+
+4. Listas simplemente enlazadas
+Una lista enlazada simple es una estructura dinámica donde cada nodo apunta al siguiente.
+Cada nodo contiene:
+-Un dato
+-Un puntero al siguiente nodo
+
+5. Formas de almacenamiento en listas
+Ordenado:
+-Se recorre la lista hasta encontrar dónde insertar el nuevo nodo manteniendo el orden.
+Desordenado:
+-El nuevo nodo se agrega al final, sin preocuparse por el orden.
+
+6. Operaciones básicas con listas
+  1.Crear lista
+  2.Insertar nodo
+  3.Eliminar nodo
+  4.Mostrar lista
+  5.Buscar en la lista
+
+0. DEFINIR ESTRUCTURA
+#include <stdio.h>
+#include <stdlib.h>
+
+// Estructura del nodo de la lista
+struct Nodo {
+    int dato;
+    struct Nodo* siguiente;
+};
+
+1. CREAR NODO---------------------------------------------------------------
+// Crea un nuevo nodo con el valor recibido
+struct Nodo* crearNodo(int valor) {
+    struct Nodo* nuevo = (struct Nodo*) malloc(sizeof(struct Nodo));
+    if (nuevo == NULL) {
+        printf("Error: no se pudo asignar memoria\n");
+        return NULL;
+    }
+    nuevo->dato = valor;        // Asignamos el valor
+    nuevo->siguiente = NULL;    // El siguiente será NULL
+    return nuevo;
+}
+2.1. INSERTAR AL FINAL -------------------------------------------------------
+void insertarFinal(struct Nodo** prim) {
+    struct Nodo* p = crearNodo(0);  // Creamos un nodo temporal
+
+    if (p == NULL) {
+        printf("Error al crear el nodo\n");
+        return;
+    }
+
+    printf("Ingrese dato: ");
+    scanf("%d", &p->dato);
+
+    if (*prim == NULL) {
+        // Si la lista está vacía, el nuevo nodo es el primero
+        *prim = p;
+    } else {
+        struct Nodo* t = *prim;
+        struct Nodo* aux = NULL;
+
+        // Recorremos hasta llegar al último nodo
+        while (t != NULL) {
+            aux = t;
+            t = t->siguiente;
+        }
+
+        aux->siguiente = p;  // Enlazamos al final
+    }
+}
+
+2.2. INSERTAR AL MEDIO -------------------------------------------------------
+void insertarMedio(struct Nodo** prim) {
+    struct Nodo* p = crearNodo(0);
+    if (p == NULL) {
+        printf("Error al crear el nodo\n");
+        return;
+    }
+
+    printf("Ingrese dato a insertar: ");
+    scanf("%d", &p->dato);
+
+    struct Nodo* t = *prim;
+    struct Nodo* aux = NULL;
+
+    // Recorremos hasta encontrar un nodo con valor mayor o igual
+    while (t != NULL && t->dato < p->dato) {
+        aux = t;
+        t = t->siguiente;
+    }
+
+    if (aux == NULL) {
+        // Insertamos al principio
+        p->siguiente = *prim;
+        *prim = p;
+    } else {
+        // Insertamos en medio
+        p->siguiente = t;
+        aux->siguiente = p;
+    }
+}
+
+2.1. INSERTAR AL PRINCIPIO ----------------------------------------
+void insertarInicio(struct Nodo** prim) {
+    int valor;
+    printf("Ingrese dato a insertar al comienzo: ");
+    scanf("%d", &valor);
+
+    // Creamos un nuevo nodo con el valor ingresado
+    struct Nodo* nuevo = crearNodo(valor);
+    if (nuevo == NULL) {
+        printf("Error al crear el nodo\n");
+        return;
+    }
+
+    // El nuevo nodo apunta al anterior primer nodo
+    nuevo->siguiente = *prim;
+
+    // Ahora el nuevo nodo es el primero de la lista
+    *prim = nuevo;
+}
+
+3.1. ELIMINAR PRIMER ELEMENTO --------------------------------------
+void eliminarPrimero(struct Nodo** prim) {
+    if (*prim == NULL) {
+        printf("La lista está vacía\n");
+        return;
+    }
+
+    struct Nodo* t = *prim;
+    *prim = t->siguiente;  // Avanzamos el inicio
+    free(t);               // Liberamos el nodo eliminado
+}
+
+3.2. ELIMINAR ULTIMO ELEMENTO -----------------------------------
+void eliminarUltimo(struct Nodo** prim) {
+    if (*prim == NULL) {
+        printf("La lista está vacía\n");
+        return;
+    }
+
+    struct Nodo* t = *prim;
+    struct Nodo* aux = NULL;
+
+    // Si hay un solo nodo
+    if (t->siguiente == NULL) {
+        free(t);
+        *prim = NULL;
+        return;
+    }
+
+    // Recorremos hasta el penúltimo nodo
+    while (t->siguiente != NULL) {
+        aux = t;
+        t = t->siguiente;
+    }
+
+    aux->siguiente = NULL;  // Eliminamos el último nodo
+    free(t);
+}
+
+3.3. ELIMINAR ELEMENTO DE EL MEDIO -------------------------------
+void eliminarElemento(struct Nodo** prim, int dato) {
+    if (*prim == NULL) {
+        printf("La lista está vacía\n");
+        return;
+    }
+
+    struct Nodo* t = *prim;
+    struct Nodo* aux = NULL;
+
+    // Buscamos el nodo con el valor
+    while (t != NULL && t->dato != dato) {
+        aux = t;
+        t = t->siguiente;
+    }
+
+    if (t == NULL) {
+        printf("No se encontró el elemento en la lista\n");
+        return;
+    }
+
+    if (aux == NULL) {
+        // El elemento está al principio
+        *prim = t->siguiente;
+    } else {
+        aux->siguiente = t->siguiente;
+    }
+
+    free(t);  // Liberamos el nodo
+}
+
+4. MOSTRAR LISTA -----------------------------------------------------
+void mostrarLista(struct Nodo* prim) {
+    if (prim == NULL) {
+        printf("La lista está vacía\n");
+        return;
+    }
+
+    printf("Elementos de la lista:\n");
+    struct Nodo* actual = prim;
+
+    while (actual != NULL) {
+        printf("%d -> ", actual->dato);  // Mostramos el dato
+        actual = actual->siguiente;      // Avanzamos al siguiente nodo
+    }
+
+    printf("NULL\n");
+}
+
+5. BUSCAR UN VALOR -------------------------------------------------------
+void buscarEnLista(struct Nodo* prim, int valor) {
+    struct Nodo* actual = prim;
+    int posicion = 0;
+    int encontrado = 0;
+
+    while (actual != NULL) {
+        if (actual->dato == valor) {
+            printf("Valor %d encontrado en la posición %d\n", valor, posicion);
+            encontrado = 1;
+            break;  // Se detiene en la primera coincidencia
+        }
+        actual = actual->siguiente;
+        posicion++;
+    }
+
+    if (!encontrado) {
+        printf("Valor %d no encontrado en la lista\n", valor);
+    }
+}
+
+
