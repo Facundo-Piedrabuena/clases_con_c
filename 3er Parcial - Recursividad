@@ -1,0 +1,15 @@
+Tema: Recursividad.
+
+Concepto: La recursividad es el proceso de definir una función en términos de sí misma.
+ Es decir, una función recursiva es aquella que se llama a sí misma dentro de su propio código.
+
+Características:
+ - Es diferente de la iteración (como los bucles for o while).
+ - Puede usarse como alternativa a las estructuras repetitivas.
+ - Debe tener un caso base, para evitar llamadas infinitas.
+  
+Requisitos para una función recursiva:
+  -Caso base (condición para detener la recursión).
+  -Llamada recursiva con una versión más simple del problema.
+
+  
