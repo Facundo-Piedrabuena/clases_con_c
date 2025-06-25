@@ -1,0 +1,65 @@
+Tema: Archivos.
+
+Concepto: Un archivo de datos es un conjunto de registros relacionados, que se trata como una unidad y se almacena sobre un dispositivo de almacenamiento externo.
+
+Tipos de Archivos :
+
+-Según su Metodo de Acceso:
+  Ficheros de Acceso Secuencia: Recorre todos los elementos hasta llegar a un registro determinado.
+  Ficheros de Acceso Directo: Mediante la especificacion del indice, se posiciona directo sobre el registro determinado.
+
+-Según Tipo de Elementos: EOF ⟶ Indica el final del archivo.
+
+  Archivos de Texto: Es una secuencia de caracteres.
+      Su info esta guardada en binario, pero se interpreta como texto.
+      Todo es texto porque los datos se escriben y se envian como caracteres.
+      Son planos: sin formatos especiales (negrita, subrayado, etc.).
+
+  Archivos Binarios: Se guardan datos con distinto formato (char, int, float).
+      Se usan estructuras para manejar esos datos.
+
+Funciones de Entrada - Salida:
+
+En C las operacion de archivos usan funciones. Hay dos tipos, con y sin “buffer”.
+  El “buffer” es una memoria temporal: las operaciones se hacen ahi, y los datos se sincronizan con el archivo.
+  Siempre hay un intermediario; los datos de lectura/escritura pasan por memoria usando fread y fwrite.
+
+Funciones de la librería <stdio.h>:
+
+fopen() ⟶ Abre un archivo.
+    -fichero = fopen(nombre_fichero, modo);
+fclose() ⟶ Cierra un archivo.
+    -fclose(nombre_fichero);
+fgets() ⟶ Lee una cadena de un archivo.
+    -fgets(cadena, num_cars, archivo);
+    -fgetc(archivo);
+fputs() ⟶ Escribe una cadena en un archivo.
+    -fputs(cadena, archivo);
+    -fputc(caracter, archivo);
+fseek() ⟶ Busca un byte especifico de un archivo binario.
+    -fseek(archivo, (cant_desplaz)L, 0);
+fprintf() ⟶ Escribe una salida con formato en el archivo.
+    -fprintf(nombre_archivo, “%d %c %s”, num, car, cad);
+fscanf() ⟶ Lee una entrada con formato desde el archivo.
+    -fscanf(nombre_archivo, “%d %c %s”, &num, &car, cad);
+feof() ⟶ Devuelve cierto si se llega al final del archivo.
+    -feof(archivo);
+ferror() ⟶ Devuelve cierto si se produce un error.
+rewind() ⟶ Coloca el localizador de posición del archivo al principio del mismo.
+    -rewind(archivo);
+remove() ⟶ Borra un archivo. Devuelve cero si tuvo exito.
+    -remove(nombre_archivo);
+fflush() ⟶ Vacía un archivo.
+ftell() ⟶ Obtiene la posición actual del indicador.
+    -ftell(archivo);
+
+Puntero a un Archivo: Es una variable de tipo puntero al tipo FILE. Se necesita para leer o escribir en los mismos. 
+Ejemplo: FILE *arch;
+
+Lectura y Escritura en un Archivo:
+
+int fwrite(void *origen, size_t tamaño, size_t cantidad, FILE *arch);
+    -fwrite(&persona, sizeof(persona), 1, archivo);
+int fread(void *destino, size_t tamaño, size_t cantidad, FILE *arch);
+    -fread(&persona, sizeof(persona), 1, archivo);
+    -Se usa con un while y feof.
